@@ -7,7 +7,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todo.db'
 
 db = SQLAlchemy(app)
 
-class Todo1(db.Model):
+class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     project = db.Column(db.String(1000), nullable=False)
@@ -19,7 +19,7 @@ with app.app_context():
 
 @app.route('/', methods=['GET'])
 def index():
-    data = Todo1.query.all()
+    data = Todo.query.all()
     context = []
     for dt in data:
         dd = {"id": dt.id, "usn": dt.usn, "name": dt.name, "project": dt.project, "due_date": dt.due_date}  # Use id instead of usn
@@ -45,7 +45,7 @@ def create_user():
 
 @app.route('/delete/<int:id>', methods=['GET', 'DELETE'])
 def delete_user(id):
-    task = Todo1.query.get(id)
+    task = Todo.query.get(id)
 
     if not task:
         return jsonify({'message': 'task not found'}), 404
@@ -59,7 +59,7 @@ def delete_user(id):
 
 @app.route('/update_task/<int:id>', methods=['GET', 'POST'])
 def update_task(id):
-    task = Todo1.query.get_or_404(id)
+    task = Todo.query.get_or_404(id)
 
     if not task:
         return jsonify({'message': 'task not found'}), 404
